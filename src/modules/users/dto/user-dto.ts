@@ -29,6 +29,5 @@ export class UserDto{
   readonly userRoleAtributed: string;
 
   @IsDate()
-  @IsNotEmpty()
   readonly userBirthdayDate: Date;
 }
