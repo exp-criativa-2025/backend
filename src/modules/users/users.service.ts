@@ -94,6 +94,33 @@ export class UsersService {
     }
   }
 
+  async deleteUserById2(id:number){
+    try {
+      console.log("entrei aqui")
+      const userForDelete = await this.prismaService.user.findUnique(
+        {
+          where: {id:id}
+        }
+      )
+      console.log("entrei aqui 2")
+      if (userForDelete?.username){
+        await this.prismaService.user.delete(
+          {
+          where:{
+            id:userForDelete.id
+          }
+          }
+        )
+        return{
+          message: "User deleted with success"
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Fail to delete the user!', HttpStatus.BAD_REQUEST)
+    }
+  }
+
   async updateUserById(id:number, updateUserDto: UpdateUserDto){
     try{
       const userForUpdate = await this.prismaService.user.findUnique({
@@ -138,6 +165,18 @@ export class UsersService {
           where: {id:id}
         }
       )
+      if (userForDelete?.username){
+        await this.prismaService.user.delete(
+          {
+          where:{
+            id:userForDelete.id
+          }
+          }
+        )
+        return{
+          message: "User deleted with success"
+        }
+      }
     } catch (error) {
       console.log(error)
       throw new HttpException('Fail to delete the user!', HttpStatus.BAD_REQUEST)
