@@ -42,32 +42,35 @@ export class UsersController {
       const uniqueUser = await this.userService.getUserById(id)
       return uniqueUser
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
-  @Patch()
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(NotFoundExceptionFilter)  
+  @Patch(':id')
   async updateUserById(
     @Param('id', ParseIntPipe)id: number,
     @Body() updateUserDto: UpdateUserDto
   ){
     try {
-      const userUpdated = await this.userService.updateUserById(id,updateUserDto)
-      return userUpdated
+      const userForUpdate = await this.userService.updateUserById(id, updateUserDto)
+      return userForUpdate
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 
-  @Delete('id')
+  @Delete(':id')
   @UseInterceptors(SuccessInterceptor)
+  @UseFilters(NotFoundExceptionFilter)  
   async deleteUserById(
     @Param('id', ParseIntPipe)id:number
   ){
     try {
       return this.userService.deleteUserById(id)
     } catch (error) {
-      throw error
+      console.log(error)
     }
   }
 }
