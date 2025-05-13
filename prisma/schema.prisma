@@ -26,3 +26,23 @@ model User {
   updatedAt        DateTime @updatedAt
   @@map("users") 
 }
+
+model Entidade {
+  id Int @id @default(autoincrement())
+  nameEntity String
+  cnpjEntity String  @unique @db.VarChar(14)
+  legalRepresentative String
+  typeEntity String
+  description String
+
+  @@map("Entidades")
+}
+
+
+model Donation {
+  id Int @id @default(autoincrement())
+  typeDonation String
+  valueDonation Float
+  birthDate DateTime
+  description String
+}
