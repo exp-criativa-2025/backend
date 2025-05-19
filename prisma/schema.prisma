@@ -26,3 +26,55 @@ model User {
   updatedAt        DateTime @updatedAt
   @@map("users") 
 }
+
+
+model Representative {
+  id               Int      @id @default(autoincrement())
+  tipo             String
+  sigla            String
+  cnpj             String
+  nome_fantasia    String
+  razao_social     String
+  representant_id  String
+  universidade     String
+  campus           String
+  numero_membros   Int
+  data_fundacao    DateTime
+  telefone         String
+  email            String
+  site             String
+  status           String
+
+  cep              String
+
+  facebook         String
+  instagram        String
+
+  @@map("representatives") 
+}
+
+model AcademicCenter {
+  id               Int      @id @default(autoincrement())
+  tipo             String
+  sigla            String
+  cnpj             String
+  nome_fantasia    String
+  razao_social     String
+  representative_id String
+  curso_vinculado  String
+  campus           String
+  numero_membros   Int
+  data_fundacao    DateTime
+  telefone         String
+  email            String
+  site             String
+  status           String
+
+  cep              String
+
+  facebook         String
+  instagram        String
+
+  @@map("academic_centers") // Optional: renames the table in the DB
+}
+
