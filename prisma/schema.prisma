@@ -33,7 +33,7 @@ model Entidade {
   cnpjEntity String  @unique @db.VarChar(14)
   legalRepresentative String
   typeEntity String
-  description String
+  description String?
 
   @@map("Entidades")
 }
