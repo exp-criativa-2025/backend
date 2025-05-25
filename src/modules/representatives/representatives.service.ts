@@ -20,4 +20,8 @@ export class RepresentativesService {
       data: representativeData,
     });
   }
+
+  async findAll(): Promise<Representative[]> {
+    return this.prisma.representative.findMany();
+  }
 }

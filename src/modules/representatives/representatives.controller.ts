@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, Get } from '@nestjs/common';
 import { RepresentativesService } from './representatives.service';
 import { CreateRepresentativeDto } from './dto/create-representative.dto';
 import { Response } from 'express';
@@ -30,6 +30,27 @@ export class RepresentativesController {
           : 'Unknown error';
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Erro ao criar representante',
+        error: errorMessage,
+      });
+    }
+  }
+
+  @Get()
+  async findAll(@Res() res: Response) {
+    try {
+      const representatives = await this.representativesService.findAll();
+      return res.status(HttpStatus.OK).json({
+        message: 'Representantes listados com sucesso!',
+        data: representatives,
+      });
+    } catch (error) {
+      console.error('Erro ao listar representantes:', error);
+      const errorMessage =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? (error as { message: string }).message
+          : 'Unknown error';
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Erro ao listar representantes',
         error: errorMessage,
       });
     }
