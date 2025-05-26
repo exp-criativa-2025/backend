@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user-entity';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
+import { DonationsModule } from 'src/modules/donations/donations.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RepresentativesModule } from 'src/modules/representatives/representativ
     }),
     PrismaModule,
     RepresentativesModule,
+    DonationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
