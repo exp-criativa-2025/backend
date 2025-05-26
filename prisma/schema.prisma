@@ -78,3 +78,13 @@ model AcademicCenter {
   @@map("academic_centers") // Optional: renames the table in the DB
 }
 
+model Donation {
+  id            Int      @id @default(autoincrement())
+  donation_name String
+  name          String
+  donated       Float    
+  type          String   
+  date          DateTime 
+
+  @@map("donations")
+}
