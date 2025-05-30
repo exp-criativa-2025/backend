@@ -6,6 +6,7 @@ import { User } from 'src/modules/users/entities/user-entity';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
 import { DonationsModule } from 'src/modules/donations/donations.module';
+import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DonationsModule } from 'src/modules/donations/donations.module';
     PrismaModule,
     RepresentativesModule,
     DonationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
