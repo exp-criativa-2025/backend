@@ -7,23 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id Int @id @default(autoincrement())
-  username         String   @unique
-  userEmail        String   @unique
-  userPassword     String
-  userCpf          String   @unique @db.VarChar(11)
-  userRoleAtributed String  @default("USER") 
-  userBirthdayDate DateTime
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                Int        @id @default(autoincrement())
+  username          String     @unique
+  userEmail         String     @unique
+  userPassword      String
+  userCpf           String     @unique @db.VarChar(11)
+  userRoleAtributed String     @default("USER") 
+  userBirthdayDate  DateTime
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  donations         Donation[] // relação com Donation
+
   @@map("users") 
 }
 
-
 model Representative {
-  id               Int        @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   tipo             String
   sigla            String
   cnpj             String
@@ -41,7 +41,7 @@ model Representative {
   cep              String
   facebook         String
   instagram        String
-  academicEntities AcademicEntity[] // <--- Add this line
+  academicEntities AcademicEntity[]
 
   @@map("representatives")
 }
@@ -53,27 +53,45 @@ enum AcademicEntityType {
 }
 
 model AcademicEntity {
-  id               Int                 @id @default(autoincrement())
+  id               Int         @id @default(autoincrement())
   type             AcademicEntityType
   fantasyName      String
-  cnpj             String             @unique
+  cnpj             String      @unique
   foundationDate   DateTime
   status           String
   cep              String
   representativeId Int
-  representative   Representative     @relation(fields: [representativeId], references: [id])
+  representative   Representative @relation(fields: [representativeId], references: [id])
+  campaigns        Campaign[]     // relação com campanhas
 
   @@map("academic_entities") 
 }
 
+model Campaign {
+  id               Int         @id @default(autoincrement())
+  name             String
+  goal             Float
+  startDate        DateTime
+  endDate          DateTime
+  academicEntityId Int
+  academicEntity   AcademicEntity @relation(fields: [academicEntityId], references: [id])
+  donations        Donation[]     // relação com doações
+
+  @@map("campaigns")
+}
 
 model Donation {
-  id            Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   donation_name String
-  name          String
-  donated       Float    
-  type          String   
-  date          DateTime 
+  name        String
+  donated     Float
+  date        DateTime
+
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+
+  campaignId  Int
+  campaign    Campaign  @relation(fields: [campaignId], references: [id])
 
   @@map("donations")
 }
