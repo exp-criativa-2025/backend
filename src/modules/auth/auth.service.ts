@@ -1,5 +1,9 @@
-import { User } from 'src/modules/users/entities/user-entity';
-import { Injectable, UnauthorizedException, HttpException, HttpStatus  } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -11,23 +15,29 @@ import { SignInDtoResponse } from './DTO/sign-in-dto-response';
 @Injectable()
 export class AuthService {
   constructor(
-    private  userService: UsersService,
-    private jwtService: JwtService
-  ){}
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-  async registerUser(userDto:SignInDto): Promise<SignInDtoResponse> {
-    if(!userDto.userEmail){
-      throw new HttpException("Email should be required!", HttpStatus.BAD_REQUEST)
+  async registerUser(userDto: SignInDto) {
+    if (!userDto.userEmail) {
+      throw new HttpException(
+        'Email should be required!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const hashedPassword = await bcrypt.hash(userDto.userPassword, 10);
-    const user = await this.userService.createUser(
-      { 
-        ...userDto, 
-        userPassword: hashedPassword 
-      });
+    const user = await this.userService.createUser({
+      ...userDto,
+      userPassword: hashedPassword,
+    });
 
-    // Generate token 
-    const payload = { sub: user.id, username: user.username, email: user.userEmail };
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      email: user.userEmail,
+    };
+
     const token = await this.jwtService.signAsync(payload);
 
     return { user, token };
@@ -35,7 +45,7 @@ export class AuthService {
 
   async validateUserForLogin(email: string, pass: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
-    
+
     if (!user) {
       return null;
     }
@@ -46,28 +56,34 @@ export class AuthService {
 
   async loginUser(userDto: LoginUserDto) {
     try {
-    const userForLogin = await this.validateUserForLogin(userDto.userEmail, userDto.userPassword)
+      const userForLogin = await this.validateUserForLogin(
+        userDto.userEmail,
+        userDto.userPassword,
+      );
 
-    if (!userForLogin) {
-      throw new UnauthorizedException('Invalid Credewntials');
-    }
-  
-    const payload = { sub: userForLogin.id, username: userForLogin.username, email: userForLogin.userEmail }; 
-
-    return { 
-      access_token: await this.jwtService.signAsync(payload),
-      user: {
-        id: userForLogin.id,
-        username: userForLogin.username,
-        email: userForLogin.userEmail
+      if (!userForLogin) {
+        throw new UnauthorizedException('Invalid Credewntials');
       }
-    };
 
+      const payload = {
+        sub: userForLogin.id,
+        username: userForLogin.username,
+        email: userForLogin.userEmail,
+      };
+
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+        user: {
+          id: userForLogin.id,
+          username: userForLogin.username,
+          email: userForLogin.userEmail,
+        },
+      };
     } catch (error) {
-      console.error
+      console.error;
       throw new HttpException(
-        'Falha no processo de login', 
-        HttpStatus.INTERNAL_SERVER_ERROR
+        'Falha no processo de login',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

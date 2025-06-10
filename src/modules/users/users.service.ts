@@ -9,32 +9,33 @@ import { Donation } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
+  constructor(private prismaService: PrismaService) {}
 
-  constructor(private prismaService : PrismaService){}
+  async createUser(createUserDto: CreateUserDto) {
+    try {
+      const newUser = await this.prismaService.user.create({
+        data: {
+          username: createUserDto.username,
+          userEmail: createUserDto.userEmail,
+          userPassword: createUserDto.userPassword,
+          userCpf: createUserDto.userCpf,
+          userRoleAtributed: createUserDto.userRoleAtributed,
+          userBirthdayDate: createUserDto.userBirthdayDate,
+        },
+        select: {
+          id: true,
+          username: true,
+          userEmail: true,
+        },
+      });
 
-  async createUser(createUserDto: CreateUserDto){
-    try{
-      const newUser = await this.prismaService.user.create(
-        {
-          data: {
-            username: createUserDto.username,
-            userEmail: createUserDto.userEmail,
-            userPassword: createUserDto.userPassword,
-            userCpf:createUserDto.userCpf,
-            userRoleAtributed: createUserDto.userRoleAtributed,
-            userBirthdayDate:createUserDto.userBirthdayDate
-          },select:{
-            id: true,
-            username:true,
-            userEmail: true,
-          }
-        })
-
-      return newUser
-
-    } catch(err){
+      return newUser;
+    } catch (err) {
       console.log(err);
-      throw new HttpException("Failed to create the user",HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'Failed to create the user',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -55,54 +56,64 @@ export class UsersService {
     }
   }
 
-  async loginUser(email: string){
+  async loginUser(email: string) {
     try {
-      const userForFind= await this.prismaService.user.findFirst({
-        where:{userEmail: email},
-        select:{
-          userEmail:true,
-          userPassword:true
-        }
-      })
+      const userForFind = await this.prismaService.user.findFirst({
+        where: { userEmail: email },
+        select: {
+          userEmail: true,
+          userPassword: true,
+        },
+      });
       if (!userForFind) {
-        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+        throw new HttpException(
+          'Usuário não encontrado!',
+          HttpStatus.NOT_FOUND,
+        );
       }
 
-      return userForFind
-
+      return userForFind;
     } catch (err) {
-      console.log(err)
-      throw new HttpException("Error while finding user",HttpStatus.INTERNAL_SERVER_ERROR)
+      console.log(err);
+      throw new HttpException(
+        'Error while finding user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getUserById(id:number): Promise<ResponseUserDto>{
     try {
-      const userForFind= await this.prismaService.user.findFirst({
-        where:{id},
-        select:{
-          id:true,
-          userEmail:true,
-          username:true,
-          createdAt:true,
-          userRoleAtributed:true,
-          userPassword:true
-        }
-      })
+      const userForFind = await this.prismaService.user.findFirst({
+        where: { id },
+        select: {
+          id: true,
+          userEmail: true,
+          username: true,
+          createdAt: true,
+          userRoleAtributed: true,
+          userPassword: true,
+        },
+      });
 
       if (!userForFind) {
-        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+        throw new HttpException(
+          'Usuário não encontrado!',
+          HttpStatus.NOT_FOUND,
+        );
       }
 
-      return userForFind
-
+      return userForFind;
     } catch (err) {
-      console.log(err)
-      throw new HttpException("Error while finding user",HttpStatus.INTERNAL_SERVER_ERROR)
+      console.log(err);
+      throw new HttpException(
+        'Error while finding user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
-  async deleteUserById2(id:number){
+  async deleteUserById2(id: number) {
     try {
       console.log("entrei aqui")
       const userForDelete = await this.prismaService.user.findUnique(
@@ -124,49 +135,59 @@ export class UsersService {
         }
       }
     } catch (error) {
-      console.log(error)
-      throw new HttpException('Fail to delete the user!', HttpStatus.BAD_REQUEST)
+      console.log(error);
+      throw new HttpException(
+        'Fail to delete the user!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async updateUserById(id:number, updateUserDto: UpdateUserDto){
-    try{
+  async updateUserById(id: number, updateUserDto: UpdateUserDto) {
+    try {
       const userForUpdate = await this.prismaService.user.findUnique({
-        where:{id: id}
-      })
+        where: { id: id },
+      });
 
       if (!userForUpdate) {
-        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+        throw new HttpException(
+          'Usuário não encontrado!',
+          HttpStatus.NOT_FOUND,
+        );
       }
 
-      const dataUser: { username?: string, userPassword?: string } = { username: updateUserDto.username ?? userForUpdate.username }
+      const dataUser: { username?: string; userPassword?: string } = {
+        username: updateUserDto.username ?? userForUpdate.username,
+      };
 
       const newUserUpdated = await this.prismaService.user.update({
-        where:{
-          id: userForUpdate.id
+        where: {
+          id: userForUpdate.id,
         },
         data: {
           username: dataUser.username,
           userEmail: updateUserDto.userEmail,
-          userRoleAtributed:updateUserDto.userRoleAtributed,
-          userPassword: dataUser?.userPassword ?? userForUpdate.userPassword
+          userRoleAtributed: updateUserDto.userRoleAtributed,
+          userPassword: dataUser?.userPassword ?? userForUpdate.userPassword,
         },
-        select:{
+        select: {
           id: true,
           username: true,
-          userEmail: true
-        }
-      })
+          userEmail: true,
+        },
+      });
 
-      return newUserUpdated
-
-    }catch(error){
-      console.error(error)
-      throw new HttpException("Fail to update the user", HttpStatus.BAD_REQUEST)
+      return newUserUpdated;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Fail to update the user',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async deleteUserById(id: number){
+  async deleteUserById(id: number) {
     try {
       const userForDelete = await this.prismaService.user.findUnique(
         {
@@ -186,12 +207,15 @@ export class UsersService {
         }
       }
     } catch (error) {
-      console.log(error)
-      throw new HttpException('Fail to delete the user!', HttpStatus.BAD_REQUEST)
+      console.log(error);
+      throw new HttpException(
+        'Fail to delete the user!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-  async findByEmail(email:string){
+  async findByEmail(email: string) {
     try {
       const user = await this.prismaService.user.findUnique({
         where: { userEmail: email },
@@ -202,7 +226,7 @@ export class UsersService {
           userPassword: true,
           createdAt: true,
           userRoleAtributed: true,
-        }
+        },
       });
 
       if (!user) {
@@ -211,8 +235,26 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      console.error(`Erro ao buscar usuário por email ${email}:`, error.message);
+      console.error(
+        `Erro ao buscar usuário por email ${email}:`,
+        error.message,
+      );
     }
+  }
+
+  async findUserDonations(userId: number): Promise<Donation[]> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: {
+        donations: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
+    return user.donations;
   }
 
   async findUserDonations(userId: number): Promise<Donation[]> {
