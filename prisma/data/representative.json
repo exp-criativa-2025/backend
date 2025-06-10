@@ -1,0 +1,22 @@
+   [
+    {
+      "representativeName": "Centro Acadêmico",
+      "representativeAcronym": "CAEX",
+      "representativeCnpj": "12345678000100",
+      "representativeFantasyName": "Centro Acadêmico de Engenharia X",
+      "representativeSocialReason": "Centro Acadêmico de Engenharia X",
+      "representativeId": "rep001",
+      "university": "Universidade Federal X",
+      "campus": "Campus Principal",
+      "membersCount": 120,
+      "foundationDate": "2010-05-20T00:00:00Z",
+      "phone": "(11) 98765-4321",
+      "email": "caex@universidadex.edu.br",
+      "website": "https://caex.universidadex.edu.br",
+      "status": "Ativo",
+      "cep": "01234567",
+      "facebook": "https://facebook.com/caex",
+      "instagram": "https://instagram.com/caex",
+      "academicEntities": []
+    }
+  ]

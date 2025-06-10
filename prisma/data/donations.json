@@ -1,0 +1,18 @@
+[
+  {
+    "donation_name": "Doe Alimentos",
+    "name": "Alice Donation",
+    "donated": 150,
+    "date": "2024-06-01T00:00:00Z",
+    "userId": 1,
+    "campaignId": 1
+  },
+  {
+    "donation_name": "Ajude a Causa",
+    "name": "Bob Donation",
+    "donated": 200,
+    "date": "2024-06-02T00:00:00Z",
+    "userId": 2,
+    "campaignId": 1
+  }
+]

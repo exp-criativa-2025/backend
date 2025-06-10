@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user-entity';
-import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from 'src/modules/users/users.module';
-import { AuthModule } from 'src/modules/auth/auth.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
+import { DonationsModule } from 'src/modules/donations/donations.module';
+import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -13,17 +14,19 @@ import { AuthModule } from 'src/modules/auth/auth.module';
       {isGlobal: true}
     ),
     TypeOrmModule.forRoot({
-      type:'postgres',
-      host:'localhost',
-      port:5432,
-      username:'postgres',
-      password:'postgres',
-      database:'nestdb',
-      entities:[User],
-      synchronize: true
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'nestdb',
+      entities: [User],
+      synchronize: true,
     }),
-    UsersModule,
-    AuthModule,
+    PrismaModule,
+    RepresentativesModule,
+    DonationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
