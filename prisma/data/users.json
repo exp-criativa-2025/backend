@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "username": "user1",
+    "userEmail": "user1@example.com",
+    "userPassword": "password",
+    "userCpf": "12345678900",
+    "userRoleAtributed": "USER",
+    "userBirthdayDate": "1990-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "username": "user2",
+    "userEmail": "user2@example.com",
+    "userPassword": "password",
+    "userCpf": "12345678901",
+    "userRoleAtributed": "USER",
+    "userBirthdayDate": "1992-05-10T00:00:00Z"
+  }
+]
