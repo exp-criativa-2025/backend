@@ -1,4 +1,4 @@
 export const jwtConstants = {
-  secret: 'tyuifgeuhkfghkjffghjfghjsoufgjfghjfhjfghjfghmalukajfg', 
-  expirationTime: "3600"
+  secret: 'TREKOOOO',
+  expirationTime: '3600',
 };

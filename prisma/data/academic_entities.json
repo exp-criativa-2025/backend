@@ -1,0 +1,11 @@
+[
+    {
+      "type": "ACADEMIC_CENTER",
+      "fantasyName": "Engenharia X",
+      "cnpj": "22345678000100",
+      "foundationDate": "2011-06-15T00:00:00Z",
+      "status": "Ativo",
+      "cep": "01234567",
+      "representativeId": 1
+    }
+  ]

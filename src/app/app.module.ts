@@ -8,6 +8,10 @@ import { UsersModule } from 'src/modules/users/users.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { EntidadeModule } from 'src/entidade/entidade.module';
 import { DonationModule } from 'src/donation/donation.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
+import { DonationsModule } from 'src/modules/donations/donations.module';
+import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -15,19 +19,23 @@ import { DonationModule } from 'src/donation/donation.module';
       {isGlobal: true}
     ),
     TypeOrmModule.forRoot({
-      type:'postgres',
-      host:'localhost',
-      port:5432,
-      username:'postgres',
-      password:'postgres',
-      database:'nestdb',
-      entities:[User],
-      synchronize: true
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'nestdb',
+      entities: [User],
+      synchronize: true,
     }),
     UsersModule,
     AuthModule,
     EntidadeModule,
-    DonationModule
+    DonationModule,
+    PrismaModule,
+    RepresentativesModule,
+    DonationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
