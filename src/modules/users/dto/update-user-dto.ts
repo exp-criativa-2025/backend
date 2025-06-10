@@ -1,21 +1,18 @@
-import { IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 
-export class UpdateUserDto{
+export class UpdateUserDto {
+  @IsOptional()
+  username: string;
 
   @IsOptional()
-  username: string
+  userEmail: string;
 
   @IsOptional()
-  userEmail: string
+  userPassword: string;
 
   @IsOptional()
-  userPassword: string
+  userRoleAtributed: string;
 
   @IsOptional()
-  userRoleAtributed: string
-
-  @IsOptional()
-  active: Boolean
-
-
+  active: boolean;
 }

@@ -1,76 +1,93 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, UseFilters, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UsersService } from './users.service';
 import { SuccessInterceptor } from 'src/utils/interceptors/sucess-interceptor-interface';
 import { NotFoundExceptionFilter } from 'src/filters/token-filter-not-found';
 import { GetUserDto } from './dto/get-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
+import { JwtAuthGuard } from '../auth/guard/auth-valid-token-guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor (private userService: UsersService){}
+  constructor(private userService: UsersService) {}
 
   @Get()
-  async findAllUser(): Promise<GetUserDto[]>{
+  async findAllUser(): Promise<GetUserDto[]> {
     try {
       const allUsers = await this.userService.findAllUsers();
-      return allUsers.map( user =>({
+      return allUsers.map((user) => ({
         id: user.id,
         username: user.username,
         userEmail: user.userEmail,
-        userPassword:user.userPassword,
-        userRoleAtributed:user.userRoleAtributed,
+        userPassword: user.userPassword,
+        userRoleAtributed: user.userRoleAtributed,
         createdAt: user.createdAt,
-      }))
+      }));
     } catch (error) {
-      throw error
+      throw error;
     }
   }
-
 
   @Get(':id')
   //@UseInterceptors(LoggersInterceptor) - a implementar
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(NotFoundExceptionFilter)
-  async getUserById(
-    @Param('id', ParseIntPipe)id:number
-  ){
+  async getUserById(@Param('id', ParseIntPipe) id: number) {
     try {
       if (id <= 0) {
-        throw new HttpException('ID must be a positive integer', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'ID must be a positive integer',
+          HttpStatus.BAD_REQUEST,
+        );
       }
-      const uniqueUser = await this.userService.getUserById(id)
-      return uniqueUser
+      const uniqueUser = await this.userService.getUserById(id);
+      return uniqueUser;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   @UseInterceptors(SuccessInterceptor)
-  @UseFilters(NotFoundExceptionFilter)  
+  @UseFilters(NotFoundExceptionFilter)
   @Patch(':id')
   async updateUserById(
-    @Param('id', ParseIntPipe)id: number,
-    @Body() updateUserDto: UpdateUserDto
-  ){
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     try {
-      const userForUpdate = await this.userService.updateUserById(id, updateUserDto)
-      return userForUpdate
+      const userForUpdate = await this.userService.updateUserById(
+        id,
+        updateUserDto,
+      );
+      return userForUpdate;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   @Delete(':id')
   @UseInterceptors(SuccessInterceptor)
-  @UseFilters(NotFoundExceptionFilter)  
-  async deleteUserById(
-    @Param('id', ParseIntPipe)id:number
-  ){
+  @UseFilters(NotFoundExceptionFilter)
+  async deleteUserById(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.userService.deleteUserById(id)
+      return this.userService.deleteUserById(id);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 }
