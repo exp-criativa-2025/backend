@@ -7,6 +7,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
 import { DonationsModule } from 'src/modules/donations/donations.module';
 import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
+import { CampaignsModule } from 'src/campaigns/campaigns.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
     RepresentativesModule,
     DonationsModule,
     DashboardModule,
+    CampaignsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
