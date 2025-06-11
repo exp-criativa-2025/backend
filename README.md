@@ -102,3 +102,16 @@ npx prisma studio
 
 Acesse http://localhost:5555 para ver as tabelas.
 
+### Step by Step using Prisma
+- For see migration status
+
+npx prisma migrate status
+
+- Cria nova migração
+
+npx prisma migrate dev --name "description"
+
+- Apply Migration in production
+
+npx prisma migrate deploy
+

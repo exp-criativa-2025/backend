@@ -41,12 +41,18 @@ export class UsersService {
   async findAllUsers(): Promise<ResponseUserDto[]>{
     try {
       const allUsers: User[] = await this.prismaService.user.findMany();
-      return allUsers;
+      return allUsers.map(user =>({
+        id: user.id,
+        username: user.username,
+        userEmail: user.userEmail,
+        userPassword:user.userPassword,
+        userRoleAtributed: user.userRoleAtributed,
+        createdAt: user.createdAt
+      }))
     } catch (error) {
       console.log(error)
       throw new HttpException('Fail to load all the user!', HttpStatus.BAD_REQUEST)
     }
-    
   }
 
   async loginUser(email: string){
@@ -114,7 +120,7 @@ export class UsersService {
           }
         )
         return{
-          message: "User deleted with success"
+          message: "Usuário deletado com sucesso"
         }
       }
     } catch (error) {
@@ -176,7 +182,7 @@ export class UsersService {
           }
         )
         return{
-          message: "User deleted with success"
+          message: "Usuário deletado com sucesso"
         }
       }
     } catch (error) {

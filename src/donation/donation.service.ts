@@ -16,7 +16,7 @@ export class DonationService {
           data:{
               typeDonation: createDonationDto.typeDonation,
               valueDonation: createDonationDto.valueDonation,
-              birthDate:createDonationDto.birthDate,
+              birthDate: new Date(createDonationDto.birthDate),
               description:createDonationDto.description 
           }, select:{
             id: true,
@@ -29,7 +29,7 @@ export class DonationService {
       return newDonation;
     } catch (err) {
       console.log(err);
-      throw new HttpException("Failed to create the user",HttpStatus.BAD_REQUEST)
+      throw new HttpException("Falha interna ao criar a doação",HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -54,6 +54,8 @@ export class DonationService {
         }
       }
     )
+
+    return donationForFind
    } catch (error) {
     throw new HttpException("Error while finding Donation",HttpStatus.INTERNAL_SERVER_ERROR)
    }
@@ -107,7 +109,7 @@ export class DonationService {
           }
         )
         return{
-          message: "User deleted with success"
+          message: "Doação deletada com sucesso"
         }
       }
     } catch (error) {

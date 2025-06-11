@@ -11,6 +11,8 @@ import { CampaignsModule } from 'src/campaigns/campaigns.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
+import { EntidadeModule } from 'src/entidade/entidade.module';
+import { DonationModule } from 'src/donation/donation.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { AuthModule } from 'src/modules/auth/auth.module';
     CampaignsModule,
     UsersModule,
     AuthModule,
+    EntidadeModule,
+    DonationModule
   ],
   controllers: [AppController],
   providers: [AppService],
