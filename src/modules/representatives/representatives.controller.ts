@@ -1,7 +1,10 @@
-import { Controller, Post, Body, Res, HttpStatus, Get } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, Get, UseInterceptors, UseFilters, ParseIntPipe, Param, HttpException, Patch, UsePipes, ValidationPipe, Delete } from '@nestjs/common';
 import { RepresentativesService } from './representatives.service';
 import { CreateRepresentativeDto } from './dto/create-representative.dto';
 import { Response } from 'express';
+import { SuccessInterceptor } from 'src/utils/interceptors/sucess-interceptor-interface';
+import { NotFoundExceptionFilter } from 'src/filters/token-filter-not-found';
+import { UpdateRepresentativeDto } from './dto/update-representative.dto';
 
 @Controller('representatives')
 export class RepresentativesController {
@@ -54,5 +57,52 @@ export class RepresentativesController {
         error: errorMessage,
       });
     }
+  }
+
+  @Get(':id')
+  @UseInterceptors(SuccessInterceptor)
+  @UseFilters(NotFoundExceptionFilter)
+  async getRepresentativeById(
+    @Param('id', ParseIntPipe) id: number,
+  ){
+    if (id <= 0) {
+      throw new HttpException('ID must be a positive integer', HttpStatus.BAD_REQUEST);
+    }
+    const representative = await this.representativesService.getRepresentativeById(id)
+
+    return {
+      message: 'Representante listado com sucesso!',
+      data: representative,
+    };
+  }
+
+   @Patch(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+  async updateRepresentative(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateRepresentativeDto: UpdateRepresentativeDto,
+  ) {
+    if (id <= 0) {
+      throw new HttpException('ID deve ser um número inteiro positivo.', HttpStatus.BAD_REQUEST);
+    }
+    const updatedRepresentative = await this.representativesService.updateRepresentativeById(
+      id,
+      updateRepresentativeDto,
+    );
+
+    return {
+      message: 'Representante atualizado com sucesso!',
+      data: updatedRepresentative,
+    };
+  }
+
+  @Delete(':id') 
+  async deleteRepresentative(@Param('id', ParseIntPipe) id: number) {
+    if (id <= 0) {
+      throw new HttpException('ID deve ser um número inteiro positivo.', HttpStatus.BAD_REQUEST);
+    }
+
+    const result = await this.representativesService.deleteRepresentativeById(id);
+    return result;
   }
 }

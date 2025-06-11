@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
+import { GetUserDto } from './dto/get-user-dto';
+import { User } from './entities/user-entity';
 
 @Injectable()
 export class UsersService {
@@ -9,8 +12,6 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto){
     try{
-
-      
       const newUser = await this.prismaService.user.create(
         {
           data: {
@@ -35,10 +36,135 @@ export class UsersService {
     }
   }
 
-  async findAll(){
-    const allUsers = await this.prismaService.user.findMany();
-
-    return allUsers;
+  async findAllUsers(): Promise<GetUserDto[]>{
+    try {
+      const allUsers: User[] = await this.prismaService.user.findMany();
+      return allUsers;
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Fail to load all the user!', HttpStatus.BAD_REQUEST)
+    }
+    
   }
 
+  async loginUser(email: string){
+    try {
+      const userForFind= await this.prismaService.user.findFirst({
+        where:{userEmail: email},
+        select:{
+          userEmail:true,
+          userPassword:true
+        }
+      })
+      if (!userForFind) {
+        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+      }
+
+      return userForFind
+
+    } catch (err) {
+      console.log(err)
+      throw new HttpException("Error while finding user",HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async getUserById(id:number){
+    try {
+      const userForFind= await this.prismaService.user.findFirst({
+        where:{id},
+        select:{
+          id:true,
+          userEmail:true,
+          username:true,
+          createdAt:true,
+          userRoleAtributed:true,
+          userPassword:true
+        }
+      })
+
+      if (!userForFind) {
+        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+      }
+
+      return userForFind
+
+    } catch (err) {
+      console.log(err)
+      throw new HttpException("Error while finding user",HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async updateUserById(id:number, updateUserDto: UpdateUserDto){
+    try{
+      const userForUpdate = await this.prismaService.user.findUnique({
+        where:{id: id}
+      })
+
+      if (!userForUpdate) {
+        throw new HttpException("Usuário não encontrado!",HttpStatus.NOT_FOUND)
+      }
+
+      const dataUser: { username?: string, userPassword?: string } = { username: updateUserDto.username ?? userForUpdate.username }
+
+      const newUserUpdated = await this.prismaService.user.update({
+        where:{
+          id: userForUpdate.id
+        },
+        data: {
+          username: dataUser.username,
+          userEmail: updateUserDto.userEmail,
+          userRoleAtributed:updateUserDto.userRoleAtributed,
+          userPassword: dataUser?.userPassword ?? userForUpdate.userPassword
+        },
+        select:{
+          id: true,
+          username: true,
+          userEmail: true
+        }
+      })
+
+      return newUserUpdated
+
+    }catch(error){
+      console.error(error)
+      throw new HttpException("Fail to update the user", HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async deleteUserById(id: number){
+    try {
+      const userForDelete = await this.prismaService.user.findUnique(
+        {
+          where: {id:id}
+        }
+      )
+    } catch (error) {
+      console.log(error)
+      throw new HttpException('Fail to delete the user!', HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async findByEmail(email:string){
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { userEmail: email },
+        select: {
+          id: true,
+          username: true,
+          userEmail: true,
+          userPassword: true,
+          createdAt: true,
+          userRoleAtributed: true,
+        }
+      });
+
+      if (!user) {
+        throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+      }
+
+      return user;
+    } catch (error) {
+      console.error(`Erro ao buscar usuário por email ${email}:`, error.message);
+    }
+  }
 }

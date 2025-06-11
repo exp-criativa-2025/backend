@@ -8,9 +8,15 @@ import { RepresentativesModule } from 'src/modules/representatives/representativ
 import { DonationsModule } from 'src/modules/donations/donations.module';
 import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
 import { CampaignsModule } from 'src/campaigns/campaigns.module';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from 'src/modules/users/users.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(
+      {isGlobal: true}
+    ),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -26,6 +32,8 @@ import { CampaignsModule } from 'src/campaigns/campaigns.module';
     DonationsModule,
     DashboardModule,
     CampaignsModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

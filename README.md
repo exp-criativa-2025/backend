@@ -101,3 +101,4 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 npx prisma studio
 
 Acesse http://localhost:5555 para ver as tabelas.
+
