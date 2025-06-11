@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import {
   Body,
   Controller,
@@ -8,43 +9,25 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
   UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  UseFilters,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user-dto';
+
 import { UsersService } from './users.service';
 import { SuccessInterceptor } from 'src/utils/interceptors/sucess-interceptor-interface';
 import { NotFoundExceptionFilter } from 'src/filters/token-filter-not-found';
-import { GetUserDto } from './dto/get-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { ResponseUserDto } from './dto/response-user-dto';
+import { JwtAuthGuard } from '../auth/guard/auth-valid-token-guard';
 
-@UseGuards(JwtAuthGuard)
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
-  constructor(private userService: UsersService) {}
 
   @Get()
-  async findAllUser(): Promise<ResponseUserDto[]>{
+  async findAllUser(): Promise<ResponseUserDto[]> {
     try {
       const allUsers = await this.userService.findAllUsers();
       return allUsers.map((user) => ({
@@ -61,12 +44,11 @@ export class UsersController {
   }
 
   @Get(':id')
-  //@UseInterceptors(LoggersInterceptor) - a implementar
   @UseInterceptors(SuccessInterceptor)
   @UseFilters(NotFoundExceptionFilter)
   async getUserById(
-    @Param('id', ParseIntPipe)id:number
-  ):Promise<ResponseUserDto>{
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ResponseUserDto> {
     try {
       if (id <= 0) {
         throw new HttpException(
@@ -78,6 +60,7 @@ export class UsersController {
       return uniqueUser;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 

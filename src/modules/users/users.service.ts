@@ -1,15 +1,13 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
-import { GetUserDto } from './dto/get-user-dto';
-import { User } from './entities/user-entity';
+import { User } from '../../entities/users/user';
 import { ResponseUserDto } from './dto/response-user-dto';
-import { Donation } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
   constructor(private prismaService: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
@@ -40,20 +38,23 @@ export class UsersService {
     }
   }
 
-  async findAllUsers(): Promise<ResponseUserDto[]>{
+  async findAllUsers(): Promise<ResponseUserDto[]> {
     try {
       const allUsers: User[] = await this.prismaService.user.findMany();
-      return allUsers.map(user =>({
+      return allUsers.map((user) => ({
         id: user.id,
         username: user.username,
         userEmail: user.userEmail,
-        userPassword:user.userPassword,
+        userPassword: user.userPassword,
         userRoleAtributed: user.userRoleAtributed,
-        createdAt: user.createdAt
-      }))
+        createdAt: user.createdAt,
+      }));
     } catch (error) {
-      console.log(error)
-      throw new HttpException('Fail to load all the user!', HttpStatus.BAD_REQUEST)
+      console.log(error);
+      throw new HttpException(
+        'Fail to load all the user!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -83,7 +84,7 @@ export class UsersService {
     }
   }
 
-  async getUserById(id:number): Promise<ResponseUserDto>{
+  async getUserById(id: number): Promise<ResponseUserDto> {
     try {
       const userForFind = await this.prismaService.user.findFirst({
         where: { id },
@@ -110,36 +111,6 @@ export class UsersService {
       throw new HttpException(
         'Error while finding user',
         HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async deleteUserById2(id: number) {
-    try {
-      console.log("entrei aqui")
-      const userForDelete = await this.prismaService.user.findUnique(
-        {
-          where: {id:id}
-        }
-      )
-      console.log("entrei aqui 2")
-      if (userForDelete?.username){
-        await this.prismaService.user.delete(
-          {
-          where:{
-            id:userForDelete.id
-          }
-          }
-        )
-        return{
-          message: "Usuário deletado com sucesso"
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(
-        'Fail to delete the user!',
-        HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -190,22 +161,18 @@ export class UsersService {
 
   async deleteUserById(id: number) {
     try {
-      const userForDelete = await this.prismaService.user.findUnique(
-        {
-          where: {id:id}
-        }
-      )
-      if (userForDelete?.username){
-        await this.prismaService.user.delete(
-          {
-          where:{
-            id:userForDelete.id
-          }
-          }
-        )
-        return{
-          message: "Usuário deletado com sucesso"
-        }
+      const userForDelete = await this.prismaService.user.findUnique({
+        where: { id: id },
+      });
+      if (userForDelete?.username) {
+        await this.prismaService.user.delete({
+          where: {
+            id: userForDelete.id,
+          },
+        });
+        return {
+          message: 'Usuário deletado com sucesso',
+        };
       }
     } catch (error) {
       console.log(error);
@@ -241,35 +208,5 @@ export class UsersService {
         error.message,
       );
     }
-  }
-
-  async findUserDonations(userId: number): Promise<Donation[]> {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: userId },
-      include: {
-        donations: true,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
-    }
-
-    return user.donations;
-  }
-
-  async findUserDonations(userId: number): Promise<Donation[]> {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: userId },
-      include: {
-        donations: true,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
-    }
-
-    return user.donations;
   }
 }

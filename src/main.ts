@@ -7,16 +7,16 @@ async function bootstrap() {
 
   app.enableCors();
   app.enableCors({
-    origin: '*', // Allow all origins
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow specific methods
-    allowedHeaders: 'Content-Type, Authorization', // Allow specific headers
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
   });
 
   const configSwaggewr = new DocumentBuilder()
-  .setTitle('TREKO API Backend')
-  .setDescription('Documentação oficial da API do TREKO')
-  .setVersion('1.0')
-  .build();
+    .setTitle('TREKO API Backend')
+    .setDescription('Documentação oficial da API do TREKO')
+    .setVersion('1.0')
+    .build();
 
   const documentFactory = SwaggerModule.createDocument(app, configSwaggewr);
   SwaggerModule.setup('api', app, documentFactory);

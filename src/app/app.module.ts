@@ -2,28 +2,19 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/modules/users/entities/user-entity';
+import { User } from 'src/entities/users/user';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { EntidadeModule } from 'src/entidade/entidade.module';
-import { DonationModule } from 'src/donation/donation.module';
+import { DonationModule } from 'src/modules/donation/donation.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
-import { DonationsModule } from 'src/modules/donations/donations.module';
 import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
-import { CampaignsModule } from 'src/campaigns/campaigns.module';
-import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from 'src/modules/users/users.module';
-import { AuthModule } from 'src/modules/auth/auth.module';
-import { EntidadeModule } from 'src/entidade/entidade.module';
-import { DonationModule } from 'src/donation/donation.module';
+import { CampaignsModule } from 'src/modules/campaigns/campaigns.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(
-      {isGlobal: true}
-    ),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -36,17 +27,14 @@ import { DonationModule } from 'src/donation/donation.module';
     }),
     UsersModule,
     AuthModule,
-    EntidadeModule,
     DonationModule,
     PrismaModule,
     RepresentativesModule,
-    DonationsModule,
     DashboardModule,
     CampaignsModule,
     UsersModule,
     AuthModule,
-    EntidadeModule,
-    DonationModule
+    DonationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
