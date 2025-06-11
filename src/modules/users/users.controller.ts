@@ -5,13 +5,14 @@ import { SuccessInterceptor } from 'src/utils/interceptors/sucess-interceptor-in
 import { NotFoundExceptionFilter } from 'src/filters/token-filter-not-found';
 import { GetUserDto } from './dto/get-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
+import { ResponseUserDto } from './dto/response-user-dto';
 
 @Controller('users')
 export class UsersController {
   constructor (private userService: UsersService){}
 
   @Get()
-  async findAllUser(): Promise<GetUserDto[]>{
+  async findAllUser(): Promise<ResponseUserDto[]>{
     try {
       const allUsers = await this.userService.findAllUsers();
       return allUsers.map( user =>({
@@ -34,7 +35,7 @@ export class UsersController {
   @UseFilters(NotFoundExceptionFilter)
   async getUserById(
     @Param('id', ParseIntPipe)id:number
-  ){
+  ):Promise<ResponseUserDto>{
     try {
       if (id <= 0) {
         throw new HttpException('ID must be a positive integer', HttpStatus.BAD_REQUEST);

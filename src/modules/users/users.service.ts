@@ -1,9 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { GetUserDto } from './dto/get-user-dto';
 import { User } from './entities/user-entity';
+import { ResponseUserDto } from './dto/response-user-dto';
+import { Donation } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -36,7 +38,7 @@ export class UsersService {
     }
   }
 
-  async findAllUsers(): Promise<GetUserDto[]>{
+  async findAllUsers(): Promise<ResponseUserDto[]>{
     try {
       const allUsers: User[] = await this.prismaService.user.findMany();
       return allUsers;
@@ -68,7 +70,7 @@ export class UsersService {
     }
   }
 
-  async getUserById(id:number){
+  async getUserById(id:number): Promise<ResponseUserDto>{
     try {
       const userForFind= await this.prismaService.user.findFirst({
         where:{id},
@@ -166,5 +168,20 @@ export class UsersService {
     } catch (error) {
       console.error(`Erro ao buscar usuário por email ${email}:`, error.message);
     }
+  }
+
+  async findUserDonations(userId: number): Promise<Donation[]> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: {
+        donations: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+
+    return user.donations;
   }
 }

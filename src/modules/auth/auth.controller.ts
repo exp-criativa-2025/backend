@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user-dto';
 import { GetUserDto } from '../users/dto/get-user-dto';
 import { LoginUserDto } from '../users/dto/login-user-dto';
+import { ResponseUserDto } from '../users/dto/response-user-dto';
+import { SignInDtoResponse } from './DTO/sign-in-dto-response';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +15,7 @@ export class AuthController {
   @Post('register')
     async registerUser(
       @Body() createUserDto: CreateUserDto
-    ){
+    ): Promise<SignInDtoResponse> {
       return this.authService.registerUser(createUserDto)
   }
 

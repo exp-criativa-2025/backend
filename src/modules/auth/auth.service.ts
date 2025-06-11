@@ -6,6 +6,7 @@ import * as bcrypt from 'bcryptjs';
 import { SignInDto } from './DTO/sign-in-dto';
 import { GetUserDto } from '../users/dto/get-user-dto';
 import { LoginUserDto } from '../users/dto/login-user-dto';
+import { SignInDtoResponse } from './DTO/sign-in-dto-response';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService
   ){}
 
-  async registerUser(userDto:SignInDto){
+  async registerUser(userDto:SignInDto): Promise<SignInDtoResponse> {
     if(!userDto.userEmail){
       throw new HttpException("Email should be required!", HttpStatus.BAD_REQUEST)
     }
