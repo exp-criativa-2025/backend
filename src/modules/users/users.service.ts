@@ -10,6 +10,7 @@ import { Donation } from '@prisma/client';
 @Injectable()
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
     try {

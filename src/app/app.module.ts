@@ -3,6 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/modules/users/entities/user-entity';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from 'src/modules/users/users.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { EntidadeModule } from 'src/entidade/entidade.module';
+import { DonationModule } from 'src/donation/donation.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { RepresentativesModule } from 'src/modules/representatives/representatives.module';
 import { DonationsModule } from 'src/modules/donations/donations.module';
@@ -29,6 +34,10 @@ import { DonationModule } from 'src/donation/donation.module';
       entities: [User],
       synchronize: true,
     }),
+    UsersModule,
+    AuthModule,
+    EntidadeModule,
+    DonationModule,
     PrismaModule,
     RepresentativesModule,
     DonationsModule,

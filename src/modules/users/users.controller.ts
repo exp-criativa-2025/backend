@@ -13,6 +13,21 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UsersService } from './users.service';
 import { SuccessInterceptor } from 'src/utils/interceptors/sucess-interceptor-interface';
@@ -22,8 +37,10 @@ import { UpdateUserDto } from './dto/update-user-dto';
 import { ResponseUserDto } from './dto/response-user-dto';
 
 @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
+  constructor(private userService: UsersService) {}
   constructor(private userService: UsersService) {}
 
   @Get()
