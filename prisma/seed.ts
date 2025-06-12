@@ -279,11 +279,11 @@ async function seedUsers() {
     await prisma.user.create({
       data: {
         username: user.username,
-        email: user.email,
-        password: user.password,
-        birthday: new Date(user.birthday),
-        cpf: user.cpf,
-        role: user.role,
+        userEmail: user.email,
+        userPassword: user.password,
+        userBirthdayDate: new Date(user.birthday),
+        userCpf: user.cpf,
+        userRoleAtributed: user.role,
       },
     });
     console.log(`✅ User ${user.username} seeded.`);
