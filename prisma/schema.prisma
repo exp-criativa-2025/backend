@@ -13,26 +13,26 @@ model User {
   userEmail         String     @unique
   userPassword      String
   userCpf           String     @unique @db.VarChar(11)
-  userRoleAtributed String     @default("USER") 
+  userRoleAtributed String     @default("USER")
   userBirthdayDate  DateTime
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
-  donations         Donation[] // relação com Donation
+  donations         Donation[]
 
-  @@map("users") 
+  @@map("users")
 }
 
 model Entidade {
-  id Int @id @default(autoincrement())
-  nameEntity String
-  cnpjEntity String  @unique @db.VarChar(14)
+  id                  Int     @id @default(autoincrement())
+  nameEntity          String
+  cnpjEntity          String  @unique @db.VarChar(14)
   legalRepresentative String
-  typeEntity String
-  description String?
-
+  typeEntity          String
+  description         String?
 }
+
 model Representative {
-  id               Int                @id @default(autoincrement())
+  id               Int              @id @default(autoincrement())
   tipo             String
   sigla            String
   cnpj             String
@@ -55,52 +55,50 @@ model Representative {
   @@map("representatives")
 }
 
-enum AcademicEntityType {
-  ACADEMIC_CENTER
-  CENTRAL_DIRECTORY
-  ATHLETICS
-}
-
 model AcademicEntity {
-  id               Int         @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   type             AcademicEntityType
   fantasyName      String
-  cnpj             String      @unique
+  cnpj             String             @unique
   foundationDate   DateTime
   status           String
   cep              String
   representativeId Int
-  representative   Representative @relation(fields: [representativeId], references: [id])
-  campaigns        Campaign[]     // relação com campanhas
+  representative   Representative     @relation(fields: [representativeId], references: [id])
+  campaigns        Campaign[]
 
-  @@map("academic_entities") 
+  @@map("academic_entities")
 }
 
 model Campaign {
-  id               Int         @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   name             String
   goal             Float
   startDate        DateTime
   endDate          DateTime
   academicEntityId Int
   academicEntity   AcademicEntity @relation(fields: [academicEntityId], references: [id])
-  donations        Donation[]     // relação com doações
+  donations        Donation[]
 
   @@map("campaigns")
 }
 
 model Donation {
-  id          Int       @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   donation_name String
-  name        String
-  donated     Float
-  date        DateTime
-
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-
-  campaignId  Int
-  campaign    Campaign  @relation(fields: [campaignId], references: [id])
+  name          String
+  donated       Float
+  date          DateTime
+  userId        Int
+  campaignId    Int
+  campaign      Campaign @relation(fields: [campaignId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 
   @@map("donations")
+}
+
+enum AcademicEntityType {
+  ACADEMIC_CENTER
+  CENTRAL_DIRECTORY
+  ATHLETICS
 }
